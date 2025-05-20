@@ -1,0 +1,12 @@
+{
+  "baseUrl": "http://localhost:8080",
+  "viewportWidth": 1280,
+  "viewportHeight": 720,
+  "integrationFolder": "tests/e2e",
+  "testFiles": "**/*.spec.js",
+  "supportFile": "tests/e2e/support/index.js",
+  "video": false,
+  "env": {
+    "API_URL": "http://localhost:3000/api"
+  }
+}

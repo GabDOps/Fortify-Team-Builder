@@ -1,0 +1,15 @@
+:root {
+    --primary-color: #4CAF50; /* Main brand color */
+    --secondary-color: #FF9800; /* Secondary color for accents */
+    --background-color: #F5F5F5; /* Background color for the app */
+    --text-color: #212121; /* Default text color */
+    --heading-color: #000000; /* Color for headings */
+    --border-color: #E0E0E0; /* Default border color */
+    --hover-color: rgba(0, 0, 0, 0.1); /* Hover effect color */
+    --font-family: 'Roboto', sans-serif; /* Default font family */
+    --font-size-base: 16px; /* Base font size */
+    --font-size-lg: 18px; /* Large font size */
+    --font-size-sm: 14px; /* Small font size */
+    --border-radius: 4px; /* Default border radius */
+    --transition-speed: 0.3s; /* Transition speed for animations */
+}
