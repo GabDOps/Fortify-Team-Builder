@@ -62,7 +62,8 @@ export default {
         name: '',
         description: '',
         type: '',
-        skills: ''
+        skills: '',
+        members: []
       },
       teamTypes: ['Tribe', 'Squad', 'Chapter', 'CoE'],
       rules: {
@@ -76,6 +77,8 @@ export default {
       handler(newVal) {
         if (newVal && this.isEditMode) {
           this.team = { ...newVal };
+        } else {
+          this.team = { name: '', description: '', type: '', skills: '', members: [] };
         }
       }
     }
@@ -85,7 +88,10 @@ export default {
       this.$emit('close');
     },
     submit() {
-      this.$emit('submit', this.team);
+      this.$emit('save', {
+        ...this.team,
+        skills: typeof this.team.skills === 'string' ? this.team.skills.split(',').map(s => s.trim()) : this.team.skills
+      });
       this.close();
     }
   }

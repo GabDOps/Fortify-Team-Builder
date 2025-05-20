@@ -1,5 +1,7 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
+import { addTeam as dbAddTeam, getTeam, getAllTeams, deleteTeam as dbDeleteTeam } from '@/services/db';
+import { v4 as uuidv4 } from 'uuid';
 
 Vue.use(Vuex);
 
@@ -14,11 +16,33 @@ const getters = {
 };
 
 const actions = {
-  addTeam({ commit }, team) {
-    commit('ADD_TEAM', team);
+  async loadTeams({ commit }) {
+    const teams = await getAllTeams();
+    commit('SET_TEAMS', teams);
   },
-  editTeam({ commit }, team) {
-    commit('EDIT_TEAM', team);
+  async addTeam({ commit }, team) {
+    const now = new Date().toISOString();
+    const newTeam = {
+      ...team,
+      id: uuidv4(),
+      createdAt: now,
+      updatedAt: now,
+      members: team.members || [],
+    };
+    await dbAddTeam(newTeam);
+    commit('ADD_TEAM', newTeam);
+  },
+  async editTeam({ commit }, team) {
+    const updatedTeam = {
+      ...team,
+      updatedAt: new Date().toISOString(),
+    };
+    await dbAddTeam(updatedTeam); // put will update if exists
+    commit('EDIT_TEAM', updatedTeam);
+  },
+  async deleteTeam({ commit }, teamId) {
+    await dbDeleteTeam(teamId);
+    commit('DELETE_TEAM', teamId);
   },
   selectTeam({ commit }, team) {
     commit('SELECT_TEAM', team);
@@ -29,6 +53,9 @@ const actions = {
 };
 
 const mutations = {
+  SET_TEAMS(state, teams) {
+    state.teams = teams;
+  },
   ADD_TEAM(state, team) {
     state.teams.push(team);
   },
@@ -37,6 +64,9 @@ const mutations = {
     if (index !== -1) {
       Vue.set(state.teams, index, updatedTeam);
     }
+  },
+  DELETE_TEAM(state, teamId) {
+    state.teams = state.teams.filter(team => team.id !== teamId);
   },
   SELECT_TEAM(state, team) {
     state.selectedTeam = team;

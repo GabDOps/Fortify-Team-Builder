@@ -6,7 +6,7 @@
       <h1>Teams Management</h1>
       <TeamFormModal v-if="showModal" @close="showModal = false" />
       <TeamList :teams="teams" @edit="editTeam" @delete="deleteTeam" />
-      <button @click="showModal = true">Add Team</button>
+      <button @click="addTeam">Add Team</button>
     </main>
     <AppFooter />
   </div>
@@ -34,18 +34,25 @@ export default {
     };
   },
   computed: {
-    ...mapState({
-      teams: state => state.teams.list,
-    }),
+    teams() {
+      return this.$store.getters['teams/allTeams'];
+    },
+  },
+  created() {
+    this.$store.dispatch('teams/loadTeams');
   },
   methods: {
     editTeam(team) {
-      // Logic to edit the selected team
+      this.$store.commit('teams/SELECT_TEAM', team);
       this.showModal = true;
     },
     deleteTeam(teamId) {
-      // Logic to delete the selected team
+      this.$store.dispatch('teams/deleteTeam', teamId);
     },
+    addTeam() {
+      this.$store.commit('teams/CLEAR_SELECTED_TEAM');
+      this.showModal = true;
+    }
   },
 };
 </script>

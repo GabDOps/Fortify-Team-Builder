@@ -27,29 +27,35 @@ export default {
   data() {
     return {
       showModal: false,
-      selectedTeam: null,
     };
   },
   computed: {
-    ...mapState({
-      teams: state => state.teams.list,
-    }),
+    teams() {
+      return this.$store.getters['teams/allTeams'];
+    },
+    selectedTeam() {
+      return this.$store.getters['teams/selectedTeam'];
+    }
   },
   methods: {
     openModal() {
-      this.selectedTeam = null;
+      this.$store.commit('teams/CLEAR_SELECTED_TEAM');
       this.showModal = true;
     },
     closeModal() {
       this.showModal = false;
     },
     saveTeam(team) {
-      this.$store.dispatch('teams/saveTeam', team);
+      if (this.selectedTeam) {
+        this.$store.dispatch('teams/editTeam', { ...this.selectedTeam, ...team });
+      } else {
+        this.$store.dispatch('teams/addTeam', team);
+      }
       this.closeModal();
     },
     editTeam(team) {
-      this.selectedTeam = team;
-      this.openModal();
+      this.$store.commit('teams/SELECT_TEAM', team);
+      this.showModal = true;
     },
     deleteTeam(teamId) {
       this.$store.dispatch('teams/deleteTeam', teamId);
